@@ -1,0 +1,64 @@
+version: '3.7'
+
+services:
+  mysql:
+    image: mysql:5.7
+    hostname: mysql
+    networks:
+      - slurm
+    environment:
+      MYSQL_DATABASE: slurm
+      MYSQL_USER: slurm
+      MYSQL_PASSWORD: slurm
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - var_lib_mysql:/var/lib/mysql
+
+  database:
+    build:
+      context: .
+      dockerfile: ./database/Dockerfile
+    depends_on:
+      - mysql
+    container_name: slurm-db
+    hostname: slurm-db
+    networks:
+      - slurm
+
+  controller:
+    build:
+      context: .
+      dockerfile: ./controller/Dockerfile
+    depends_on:
+      - database
+    container_name: slurm-controller
+    hostname: slurm-controller
+    networks:
+      - slurm
+
+  worker01:
+    build:
+      context: .
+      dockerfile: ./worker/Dockerfile
+    depends_on:
+      - controller
+    container_name: slurm-worker1
+    hostname: slurm-worker1
+    networks:
+      - slurm
+
+  worker02:
+    build:
+      context: .
+      dockerfile: ./worker/Dockerfile
+    depends_on:
+      - controller
+    container_name: slurm-worker2
+    hostname: slurm-worker2
+    networks:
+      - slurm
+
+networks:
+  slurm:
+volumes:
+  var_lib_mysql:

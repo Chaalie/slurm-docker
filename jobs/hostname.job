@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#SBATCH -N 2
+#SBATCH --job-name=hostname
+#SBATCH --output=hostname.out
+#SBATCH --error=hostname.err
+
+srun hostname
