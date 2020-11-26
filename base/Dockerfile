@@ -1,4 +1,5 @@
-FROM debian:buster-slim
+FROM ubuntu:focal
+ENV DEBIAN_FRONTEND="noninteractive"
 
 # download utils
 RUN apt-get update && apt-get install -y \
@@ -14,7 +15,14 @@ RUN apt-get update && apt-get install -y \
   vim \
   mailutils \
   default-mysql-client \
-  default-libmysqlclient-dev
+  default-libmysqlclient-dev \
+  libssl-dev \
+  libpam-dev \
+  libncurses5-dev \
+  libgtk2.0-dev \
+  gawk \
+  man2html \
+  systemd
 
 # create Munge and Slurm users & groups
 RUN export MUNGEUSER=991 \
@@ -48,11 +56,8 @@ RUN mkdir /etc/slurm \
     && chown -R slurm:slurm /var/*/slurm* /data \
     && chown -R munge:munge /run/munge
 
-ADD slurm-20.02.5.tar.bz2 .
-RUN cd slurm-20.02.5 \
- && ./configure --enable-debug --prefix=/usr --sysconfdir=/etc/slurm \
-    --with-mysql_config=/usr/bin  --libdir=/usr/lib64 \
- && make \
- && make install
+ADD slurm /slurm
+RUN cd /slurm && make install
 
-ENTRYPOINT ["slurmctld"]
+CMD tail -f /dev/null
+# ENTRYPOINT ["slurmctld"]
