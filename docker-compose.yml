@@ -35,6 +35,8 @@ services:
     hostname: slurm-controller
     networks:
       - slurm
+    volumes:
+      - ./jobs:/data
 
   worker01:
     build:
