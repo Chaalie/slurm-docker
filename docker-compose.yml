@@ -88,6 +88,8 @@ services:
       ETCDCTL_API: 3
       ETCDCTL_ENDPOINTS: etcd:2379
       DEVICE_COUNT: 2
+      DAC_DEVICE_CAPACITY_GB: 10
+      # total bb capacity = DEVICE_COUNT * DAC_DEVICE_CAPACITY_GB
     networks:
       - slurm
     depends_on:
