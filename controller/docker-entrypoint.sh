@@ -13,4 +13,4 @@ until 2>/dev/null >/dev/tcp/slurm-db/6819
 echo "Slurm database is now available..."
 
 echo "Starting Slurm Controller Daemon..."
-exec sudo -u slurm slurmctld -Dvvv
+exec slurmctld -Dvvv

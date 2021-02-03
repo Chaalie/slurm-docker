@@ -16,4 +16,4 @@ echo "Waiting for MySQL database ..."
 echo "Database is now available..."
 
 echo "Starting Slurm DB Daemon..."
-exec sudo -u slurm slurmdbd -Dvvv
+exec slurmdbd -Dvvv

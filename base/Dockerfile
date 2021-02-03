@@ -25,12 +25,18 @@ RUN apt-get update && apt-get install -y \
   systemd
 
 # create Munge and Slurm users & groups
-RUN export MUNGEUSER=991 \
- && groupadd -r -g $MUNGEUSER munge \
- && useradd  -m -c "MUNGE Uid 'N' Gid Emporium" -d /var/lib/munge -u $MUNGEUSER -g munge  -s /bin/bash munge \
- && export SLURMUSER=992 \
- && groupadd -r -g $SLURMUSER slurm \
- && useradd  -m -c "SLURM workload manager" -d /var/lib/slurm -u $SLURMUSER -g slurm -G 0  -s /bin/bash slurm  
+ENV MUNGEUSER="991"
+RUN groupadd -r -g $MUNGEUSER munge \
+ && useradd  -m -c "MUNGE Uid 'N' Gid Emporium" -d /var/lib/munge -u $MUNGEUSER -g munge -s /bin/bash munge
+
+ENV SLURMUSER="992"
+RUN groupadd -r -g $SLURMUSER slurm \
+ && useradd  -m -c "SLURM workload manager" -d /var/lib/slurm -u $SLURMUSER -g slurm -G sudo,root -s /bin/bash slurm
+
+# HACK: allow all sudoers use sudo without password
+# It is required, because a slurm user instead of root is being used and Munge setup
+# needs to be done, from munge user context without providing a password.
+RUN echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 
 # setup Munge
 RUN apt-get install -y munge libmunge-dev libmunge2 \

@@ -13,4 +13,4 @@ until 2>/dev/null >/dev/tcp/slurm-controller/6817
 echo "Slurm controller is now available..."
 
 echo "Starting Slurm Node Daemon..."
-exec sudo -u slurm slurmd -Dvvv
+exec slurmd -Dvvv
