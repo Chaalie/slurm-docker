@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y \
   gnupg \
   python3 \
   python3-pip \
+  python3-venv \
   vim \
   mailutils \
   default-mysql-client \
@@ -104,7 +105,11 @@ RUN set -x \
     && install -D -m755 /usr/local/bin/dacctl /opt/cray/dw_wlm/default/bin/dw_wlm_cli \
     && install -D -m755 /usr/local/bin/dacctl /opt/cray/dws/default/bin/dwstat \
     && ln -s /usr/local/bin/dacctl /usr/local/bin/dw_wlm_cli \
-    && ln -s /usr/local/bin/dacctl /usr/local/bin/dwstat
+    && ln -s /usr/local/bin/dacctl /usr/local/bin/dwstat \
+    && mkdir - p /var/lib/data-acc/ \
+    && cp -r /usr/local/bin/data-acc/fs-ansible /var/lib/data-acc/ \
+    && cd /var/lib/data-acc/fs-ansible \
+    && python3 -m venv .venv
 
 RUN touch /var/log/dacctl.log \
     && chown -R slurm:slurm /var/log/dacctl.log
